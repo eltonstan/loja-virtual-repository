@@ -62,4 +62,32 @@ public class ProdutoDAO {
 
 	}
 
+	public List<Produto> buscar(Categoria ct) throws SQLException {
+		
+		List<Produto> produtos = new ArrayList<Produto>();
+
+		String sql = "SELECT ID, NOME, DESCRICAO FROM PRODUTO WHERE CATEGORIA_ID = ?";
+		try (PreparedStatement stm = con.prepareStatement(sql)) {
+			
+			stm.setInt(1, ct.getId());
+			stm.execute();
+
+			try(ResultSet rst = stm.getResultSet()) {
+				while (rst.next()) {
+					
+					Integer id = rst.getInt("ID");
+					String nome = rst.getString("NOME");
+					String descricao = rst.getString("DESCRICAO");
+					Produto produto = new Produto(id, nome, descricao);
+					
+					produtos.add(produto);
+				}
+			}
+		}
+		
+		return produtos;
+		
+		
+	}
+
 }
